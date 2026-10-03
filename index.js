@@ -13,13 +13,16 @@ function startBot(botName, delay) {
   setTimeout(() => {
     console.log(`Connecting ${botName}...`);
     
-    let options = {
+    const bot = mineflayer.createBot({
       host: SERVER_HOST,
       port: SERVER_PORT,
-      username: botName
-    };
+      username: botName,
+      version: '1.21.1',
+      checkTimeoutInterval: 60 * 1000
+    });
 
-    const bot = mineflayer.createBot(options);
+    // Force connection version handling
+    bot._client.version = '1.21.1';
 
     bot.on('spawn', () => {
       console.log(`SUCCESS: ${botName} connected to server!`);
