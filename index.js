@@ -4,7 +4,7 @@ const mineflayer = require('mineflayer');
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.get('/', (req, res) => res.send('24/7 AFK Bots Online!'));
-app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
 const SERVER_HOST = 'mastersmp319.mcsh.io';
 const SERVER_PORT = 25565;
@@ -12,15 +12,17 @@ const SERVER_PORT = 25565;
 function startBot(botName, delay) {
   setTimeout(() => {
     console.log(`Connecting ${botName}...`);
-    const bot = mineflayer.createBot({
+    
+    let options = {
       host: SERVER_HOST,
       port: SERVER_PORT,
-      username: botName,
-      version: false // Auto-detect server version
-    });
+      username: botName
+    };
+
+    const bot = mineflayer.createBot(options);
 
     bot.on('spawn', () => {
-      console.log(`${botName} connected!`);
+      console.log(`SUCCESS: ${botName} connected to server!`);
       setTimeout(() => bot.chat('/register BotPass123 BotPass123'), 2000);
       setTimeout(() => bot.chat('/login BotPass123'), 4000);
 
@@ -30,12 +32,14 @@ function startBot(botName, delay) {
       }, 30000);
     });
 
-    bot.on('end', () => {
-      console.log(`${botName} disconnected. Reconnecting in 15s...`);
+    bot.on('end', (reason) => {
+      console.log(`${botName} disconnected (${reason}). Reconnecting in 15s...`);
       setTimeout(() => startBot(botName, 0), 15000);
     });
 
-    bot.on('error', (err) => console.log(`${botName} error:`, err));
+    bot.on('error', (err) => {
+      console.log(`${botName} error:`, err.message || err);
+    });
   }, delay);
 }
 
