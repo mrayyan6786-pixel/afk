@@ -16,7 +16,7 @@ function startBot(botName, delay) {
       host: SERVER_HOST,
       port: SERVER_PORT,
       username: botName,
-      version: false // Auto-detect server version automatically
+      version: false // Auto-detect server version
     });
 
     bot.on('spawn', () => {
